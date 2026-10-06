@@ -267,6 +267,38 @@
 
   .signature-container strong { color: var(--purple); }
 
+  .waiver-title {
+    font-family: 'Secular One', sans-serif;
+    font-size: 16px;
+    color: var(--black);
+    margin-bottom: 10px;
+  }
+
+  .waiver-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 16px;
+  }
+
+  .waiver-list li {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.7;
+    font-weight: 500;
+    padding-right: 18px;
+    position: relative;
+  }
+
+  .waiver-list li::before {
+    content: '•';
+    position: absolute;
+    right: 0;
+    color: var(--purple);
+    font-weight: 900;
+  }
+
   canvas {
     width: 100%;
     height: 130px;
@@ -925,10 +957,19 @@
 
     <!-- Signature -->
     <div class="signature-container">
-      <p>
-        אני, ההורה / האפוטרופוס, <strong>מודע/ת לאופי המחנה, לתנאי השטח ולסכנות שברכיבת שטח</strong>.<br>
-        אני מאשר/ת את השתתפות ילדי/ילדתי במחנה חנוכה של טבע בייק ולוקח/ת אחריות מלאה.
-      </p>
+      <div class="waiver-title">הצהרת הורה</div>
+      <ul class="waiver-list">
+        <li>אני מאשר/ת את השתתפות בני/בתי במחנה הרכיבה של טבע בייק, <strong>כולל לינה מחוץ לבית</strong>.</li>
+        <li>ידוע לי שרכיבת שטח ופעילות אתגרית כוללות <strong>סיכונים מהותיים, לרבות נפילה, פציעה ונזק גופני</strong>, ואני מאשר/ת את ההשתתפות מתוך בחירה מלאה ואחריות הורית.</li>
+        <li>ידוע לי שנדרשת <strong>יכולת רכיבה בסיסית ומעלה</strong>.</li>
+        <li>אני אחראי/ת לצייד את ילדי ב<strong>אופניים תקינים ובטיחותיים, קסדה תקנית, מגני גוף, מים וציוד אישי</strong> כנדרש.</li>
+        <li>אני מאשר/ת שילדי יישמע להוראות הצוות, ומודע/ת לכך ש<strong>הפרה חמורה של כללי הבטיחות עלולה להוביל להפסקת השתתפות</strong>.</li>
+        <li>אני מתחייב/ת לעדכן את מארגני הפעילות בכל <strong>מגבלה רפואית או רגישות רלוונטית</strong>.</li>
+      </ul>
+      <label class="checkbox-row">
+        <input type="checkbox" id="waiverConfirm">
+        <span>קראתי ואני מאשר/ת את <strong>כל סעיפי ההצהרה</strong>. חתימה:</span>
+      </label>
       <canvas id="signatureCanvas"></canvas>
       <div class="sig-actions">
         <button class="sig-clear" onclick="clearSignature()">מחק חתימה</button>
@@ -1069,6 +1110,10 @@ async function submitForm() {
   }
   if (!document.getElementById('policyConfirm').checked) {
     alert('יש לאשר את מדיניות הביטול וההחזרים');
+    return;
+  }
+  if (!document.getElementById('waiverConfirm').checked) {
+    alert('יש לאשר את הצהרת ההורה');
     return;
   }
   if (!hasSig) {
