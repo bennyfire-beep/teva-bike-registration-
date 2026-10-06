@@ -471,30 +471,69 @@
   /* ── HERO PHOTO ── */
   .hero-photo {
     position: relative;
-    margin: -20px -16px 0;
-    border-radius: 0 0 24px 24px;
+    margin: -20px calc(50% - 50vw) 0;
+    height: clamp(300px, 62vw, 560px);
     overflow: hidden;
-    animation: fadeDown 0.5s ease;
+    -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+    animation: heroIn 1.2s ease;
   }
 
   .hero-photo img {
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
+    height: 100%;
     object-fit: cover;
+    object-position: center 62%;
   }
 
+  /* purple/dusk tint so the photo melts into the brand colors */
   .hero-photo::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, transparent 65%, var(--black) 100%);
+    background:
+      linear-gradient(to bottom, rgba(13,13,13,0.35) 0%, transparent 25%),
+      radial-gradient(ellipse at 50% 100%, rgba(181,53,154,0.35) 0%, transparent 60%);
     pointer-events: none;
   }
 
-  @media (min-width: 712px) {
-    .hero-photo { margin: 0; border-radius: 24px; }
+  @media (min-width: 900px) {
+    .hero-photo {
+      -webkit-mask-image:
+        linear-gradient(to bottom, #000 50%, transparent 100%),
+        linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      -webkit-mask-composite: source-in;
+              mask-image:
+        linear-gradient(to bottom, #000 50%, transparent 100%),
+        linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+              mask-composite: intersect;
+    }
+  }
+
+  @keyframes heroIn {
+    from { opacity: 0; transform: scale(1.04); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* header overlaps the bottom of the photo */
+  .hero-photo + .header {
+    position: relative;
+    z-index: 2;
+    margin-top: -110px;
+    padding-top: 0;
+  }
+
+  .hero-photo + .header img {
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--black), 0 12px 40px rgba(181,53,154,0.55);
+  }
+
+  @media (max-width: 500px) {
+    .hero-photo { height: 340px; }
+    .hero-photo img { object-position: 62% 72%; }
+    .hero-photo + .header { margin-top: -60px; }
+    .hero-photo + .header img { width: 130px !important; height: 130px !important; }
   }
 
   /* ── HANUKKAH CAMP ADDITIONS ── */
@@ -1051,7 +1090,7 @@ const MAX_PARTICIPANTS = 24;
 const REGISTERED_COUNT = 0;
 
 // Payment link shown at the end of the form
-const PAYMENT_URL = "https://PAYMENT-LINK-HERE";
+const PAYMENT_URL = "https://arbox.link/Tfe42iL1";
 
 // Google Form for registrations
 const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/GOOGLE-FORM-ID-HERE/viewform";
@@ -1161,8 +1200,10 @@ async function submitForm() {
   // Save details to show in success screen
   sessionStorage.setItem('riderName', riderName);
 
-  // Open Google Form in new tab
-  window.open(GOOGLE_FORM_URL, '_blank');
+  // Open Google Form in new tab (only once a real form link is set)
+  if (!GOOGLE_FORM_URL.includes('GOOGLE-FORM-ID-HERE')) {
+    window.open(GOOGLE_FORM_URL, '_blank');
+  }
 
   setTimeout(showSuccess, 800);
 }
